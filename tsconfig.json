@@ -1,0 +1,25 @@
+{
+  "compilerOptions": {
+    "target": "es2016",                                  /* Set the JavaScript language version for emitted JavaScript. */
+    "module": "commonjs",                                /* Specify module code generation. */
+    "strict": true,                                      /* Enable all strict type-checking options. */
+    "esModuleInterop": true,                             /* Enable interoperability for CommonJS and ES modules. */
+    "forceConsistentCasingInFileNames": true,            /* Ensure consistent casing in file names. */
+    "moduleResolution": "node",                         /* Use Node.js-style module resolution. */
+    "baseUrl": "./",                                     /* Set the base directory for module resolution. */
+    "outDir": "./dist",                                  /* Redirect output structure to the 'dist' folder. */
+    "rootDir": "./src",                                  /* Specify the root folder for input files. */
+    "removeComments": true,                              /* Remove comments from emitted files. */
+    "sourceMap": true,                                   /* Generate source maps for debugging. */
+    "declaration": true,                                 /* Generate .d.ts files for type declarations. */
+    "declarationMap": true,                              /* Create sourcemaps for .d.ts files. */
+    "skipLibCheck": true                                 /* Skip type checking all .d.ts files. */
+  },
+  "include": [
+    "src/**/*.ts"                                       /* Include all TypeScript files in the 'src' folder. */
+  ],
+  "exclude": [
+    "node_modules",                                     /* Exclude dependencies. */
+    "dist"                                              /* Exclude output directory. */
+  ]
+}
