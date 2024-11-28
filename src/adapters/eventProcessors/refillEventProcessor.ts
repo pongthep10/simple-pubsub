@@ -1,11 +1,11 @@
-import { IEventProcessor } from "../IEventProcessor";
+import { IEventProcessor } from "src/adapters/IEventProcessor";
 import { EventEntity } from "src/domains/entities/eventEntity";
 import { PubSubFramework } from "src/infrastructure/pubsub/pubsubFramework";
 import { MessageEmitterRepository } from "src/infrastructure/repositories/messageEmitterRepository";
 import { AddStockUseCase } from "src/usecases/addStockUseCase";
 import { MachineRepository } from "src/infrastructure/repositories/machineRepository";
 
-class RefillEventProcessor implements IEventProcessor {
+export class RefillEventProcessor implements IEventProcessor {
   constructor(
     private machineRepository = new MachineRepository(),
     private messageEmitterRepository = new MessageEmitterRepository(new PubSubFramework()),
@@ -17,5 +17,3 @@ class RefillEventProcessor implements IEventProcessor {
     addStockUseCase.execute(event.machineId, event.payload.quantity);
   }
 }
-
-export { RefillEventProcessor };

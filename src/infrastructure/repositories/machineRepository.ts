@@ -1,5 +1,5 @@
-import { MachineEntity } from "../../domains/entities/machineEntity";
-import { IMachineRepository } from "../../domains/repositories/IMachineRepository";
+import { MachineEntity } from "src/domains/entities/machineEntity";
+import { IMachineRepository } from "src/domains/repositories/IMachineRepository";
 
 export class MachineRepository implements IMachineRepository {
     private machines: Map<string, MachineEntity> = new Map();

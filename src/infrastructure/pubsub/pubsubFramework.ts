@@ -1,5 +1,5 @@
-import { EventEntity } from "../../domains/entities/eventEntity";
-import { ISubscriber } from "./subscriber";
+import { EventEntity } from "src/domains/entities/eventEntity";
+import { ISubscriber } from "src/infrastructure/pubsub/subscriber";
 
 interface IPublishSubscribeService {
   publish (event: EventEntity): void;

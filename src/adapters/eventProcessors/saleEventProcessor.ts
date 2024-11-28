@@ -1,4 +1,4 @@
-import { IEventProcessor } from "../IEventProcessor";
+import { IEventProcessor } from "src/adapters/IEventProcessor";
 import { EventEntity } from "src/domains/entities/eventEntity";
 import { PubSubFramework } from "src/infrastructure/pubsub/pubsubFramework";
 import { MessageEmitterRepository } from "src/infrastructure/repositories/messageEmitterRepository";

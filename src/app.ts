@@ -1,13 +1,13 @@
-import { EventEntity } from "./domains/entities/eventEntity";
-import { MachineEntity } from "./domains/entities/machineEntity";
-import { PubSubFramework } from "./infrastructure/pubsub/pubsubFramework";
-import { MachineRepository } from "./infrastructure/repositories/machineRepository";
-import { MessageEmitterRepository } from "./infrastructure/repositories/messageEmitterRepository";
-import { SaleEventProcessor } from "./adapters/eventProcessors/saleEventProcessor";
-import { RefillEventProcessor } from "./adapters/eventProcessors/refillEventProcessor";
-import { StockWarningEventProcessor } from "./adapters/eventProcessors/stockWarningEventProcessor";
-import { StockOkEventProcessor } from "./adapters/eventProcessors/stockOkEventProcessor";
-import { Subscriber } from "./infrastructure/pubsub/subscriber";
+import { EventEntity } from "src/domains/entities/eventEntity";
+import { MachineEntity } from "src/domains/entities/machineEntity";
+import { PubSubFramework } from "src/infrastructure/pubsub/pubsubFramework";
+import { MachineRepository } from "src/infrastructure/repositories/machineRepository";
+import { MessageEmitterRepository } from "src/infrastructure/repositories/messageEmitterRepository";
+import { SaleEventProcessor } from "src/adapters/eventProcessors/saleEventProcessor";
+import { RefillEventProcessor } from "src/adapters/eventProcessors/refillEventProcessor";
+import { StockWarningEventProcessor } from "src/adapters/eventProcessors/stockWarningEventProcessor";
+import { StockOkEventProcessor } from "src/adapters/eventProcessors/stockOkEventProcessor";
+import { Subscriber } from "src/infrastructure/pubsub/subscriber";
 
 const randomMachine = (): string => {
   const random = Math.random() * 3;

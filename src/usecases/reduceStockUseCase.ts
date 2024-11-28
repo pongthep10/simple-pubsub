@@ -1,6 +1,6 @@
-import { EventEntity } from "../domains/entities/eventEntity";
-import { IMachineRepository } from "../domains/repositories/IMachineRepository";
-import { IMessageEmitterRepository } from "../domains/repositories/IMessageEmitterRepository";
+import { EventEntity } from "src/domains/entities/eventEntity";
+import { IMachineRepository } from "src/domains/repositories/IMachineRepository";
+import { IMessageEmitterRepository } from "src/domains/repositories/IMessageEmitterRepository";
 
 export class ReduceStockUseCase {
   constructor(
