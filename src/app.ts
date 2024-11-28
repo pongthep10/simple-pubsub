@@ -3,57 +3,64 @@ import { MachineEntity } from "./domains/entities/machineEntity";
 import { PubSubFramework } from "./infrastructure/pubsub/pubsubFramework";
 import { MachineRepository } from "./infrastructure/repositories/machineRepository";
 import { MessageEmitterRepository } from "./infrastructure/repositories/messageEmitterRepository";
-import { DependencyResolver } from "./adapters/dependencyResolver";
-import { StockOkSubscriber } from "./infrastructure/pubsub/subscribers/stockOkSubscriber";
-import { StockWarningSubscriber } from "./infrastructure/pubsub/subscribers/stockWarningSubscriber";
+import { SaleEventProcessor } from "./adapters/eventProcessors/saleEventProcessor";
+import { RefillEventProcessor } from "./adapters/eventProcessors/refillEventProcessor";
+import { StockWarningEventProcessor } from "./adapters/eventProcessors/stockWarningEventProcessor";
+import { StockOkEventProcessor } from "./adapters/eventProcessors/stockOkEventProcessor";
+import { Subscriber } from "./infrastructure/pubsub/subscriber";
 
 const randomMachine = (): string => {
-    const random = Math.random() * 3;
-    if (random < 1) return "001";
-    else if (random < 2) return "002";
-    return "003";
-  };
-  
-  const eventGenerator = (): EventEntity => {
-    const random = Math.random();
-    if (random < 0.5) {
-      const saleQty = Math.random() < 0.5 ? 1 : 2; // 1 or 2
-      return new EventEntity("sale", randomMachine(), { quantity: saleQty });
-    }
-    const refillQty = Math.random() < 0.5 ? 3 : 5; // 3 or 5
-    return new EventEntity("refill", randomMachine(), { quantity: refillQty });
-  };
+  const random = Math.random() * 3;
+  if (random < 1) return "001";
+  else if (random < 2) return "002";
+  return "003";
+};
+
+const eventGenerator = (): EventEntity => {
+  const random = Math.random();
+  if (random < 0.5) {
+    const saleQty = Math.random() < 0.5 ? 1 : 2; // 1 or 2
+    return new EventEntity("sale", randomMachine(), { quantity: saleQty });
+  }
+  const refillQty = Math.random() < 0.5 ? 3 : 5; // 3 or 5
+  return new EventEntity("refill", randomMachine(), { quantity: refillQty });
+};
 
 (async () => {
   // Initialize infrastructure
   const pubSub = new PubSubFramework();
   const machineRepository = new MachineRepository();
-  const pubSubRepository = new MessageEmitterRepository(pubSub);
+  const messageEmitterRepository = new MessageEmitterRepository(pubSub);
 
   // Add machines to repository
-  machineRepository.addMachine(new MachineEntity("001", 10));
-  machineRepository.addMachine(new MachineEntity("002", 10));
-  machineRepository.addMachine(new MachineEntity("003", 10));
+  machineRepository.addMachine(new MachineEntity("001", 3));
+  machineRepository.addMachine(new MachineEntity("002", 7));
+  machineRepository.addMachine(new MachineEntity("003", 1));
 
-  // Initialize DependencyResolver
-  const resolver = new DependencyResolver(machineRepository, pubSubRepository);
+  // Create processors for each topic
+  const saleProcessor = new SaleEventProcessor();
+  const refillProcessor = new RefillEventProcessor();
+  const stockWarningProcessor = new StockWarningEventProcessor();
+  const stockOkProcessor = new StockOkEventProcessor();
 
-  // Register event subscribers
-  const stockWarningSubscriber = new StockWarningSubscriber();
-  const stockOkSubscriber = new StockOkSubscriber();
-
-  pubSub.subscribe("low_stock_warning", stockWarningSubscriber); // Handle low stock warning
-  pubSub.subscribe("stock_level_ok", stockOkSubscriber); // Handle stock level recovery
+  // Create and register subscribers
+  pubSub.subscribe("sale", new Subscriber("sale", saleProcessor));
+  pubSub.subscribe("refill", new Subscriber("refill", refillProcessor));
+  pubSub.subscribe("low_stock_warning", new Subscriber("low_stock_warning", stockWarningProcessor));
+  pubSub.subscribe("stock_level_ok", new Subscriber("stock_level_ok", stockOkProcessor));
 
   // Generate and process random events
-  const events: EventEntity[] = Array.from({ length: 10 }, () => eventGenerator()); // 10 random events
+  const events: EventEntity[] = Array.from({ length: 10 }, () => eventGenerator());
 
   console.log("Generated Events:");
   events.forEach(event => console.log(event));
 
-  // Process each event
-  console.log("\nProcessing Events:");
-  events.forEach(event => resolver.resolveUseCase(event));
+  // Publish each event
+  console.log("\nPublishing Events:");
+  events.forEach(event => {
+    console.log(`Publishing event: ${event.topic} for machine ${event.machineId}`);
+    pubSub.publish(event);
+  });
 
   console.log("\nFinal Machine States:");
   ["001", "002", "003"].forEach(machineId => {
