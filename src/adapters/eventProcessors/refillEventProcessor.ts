@@ -1,6 +1,6 @@
 import { IEventProcessor } from "src/adapters/IEventProcessor";
 import { EventEntity } from "src/domains/entities/eventEntity";
-import { PubSubFramework } from "src/infrastructure/pubsub/pubsubFramework";
+import pubSubFrameworkInstance from "src/infrastructure/pubsub/pubsubFrameworkInstance";
 import { MessageEmitterRepository } from "src/infrastructure/repositories/messageEmitterRepository";
 import { AddStockUseCase } from "src/usecases/addStockUseCase";
 import { MachineRepository } from "src/infrastructure/repositories/machineRepository";
@@ -8,7 +8,7 @@ import { MachineRepository } from "src/infrastructure/repositories/machineReposi
 export class RefillEventProcessor implements IEventProcessor {
   constructor(
     private machineRepository = new MachineRepository(),
-    private messageEmitterRepository = new MessageEmitterRepository(new PubSubFramework()),
+    private messageEmitterRepository = new MessageEmitterRepository(pubSubFrameworkInstance), // should use the global instance
   ) {}
 
   process(event: EventEntity): void {

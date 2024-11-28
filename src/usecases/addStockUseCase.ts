@@ -4,23 +4,30 @@ import { IMessageEmitterRepository } from "src/domains/repositories/IMessageEmit
 
 export class AddStockUseCase {
   constructor(
-    private machineRepository: IMachineRepository,
-    private messageEmitterRepository: IMessageEmitterRepository
+    private readonly machineRepository: IMachineRepository,
+    private readonly messageEmitterRepository: IMessageEmitterRepository
   ) {}
 
   execute(machineId: string, quantity: number): void {
     const machine = this.machineRepository.getMachine(machineId);
-    if (!machine) throw new Error(`Machine ${machineId} not found`);
 
-    const newStock = machine.stock + quantity;
+    if (!machine) {
+      throw new Error(`Machine ${machineId} not found`);
+    }
+
+    const previousStock = machine.stock;
+    const newStock = previousStock + quantity;
+
+    console.log(`Adding ${quantity} to machine ${machineId}. Previous stock: ${previousStock}, New stock: ${newStock}`);
     this.machineRepository.updateStock(machineId, newStock);
 
-    if (machine.stock < 3 && newStock >= 3 && machine.lowStockWarningSent) {
-      // Generate and publish StockLevelOkEvent
+    // Check for StockLevelOkEvent condition
+    if (previousStock < 3 && newStock >= 3 && machine.lowStockWarningSent) {
+      console.log(`Machine ${machineId}: Stock level OK. Publishing 'stock_level_ok' event.`);
       const stockLevelOkEvent = new EventEntity('stock_level_ok', machineId);
       this.messageEmitterRepository.publish(stockLevelOkEvent);
 
-      // Update the machine's state
+      // Reset the warning flag
       machine.lowStockWarningSent = false;
     }
   }

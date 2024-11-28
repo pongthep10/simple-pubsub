@@ -1,0 +1,17 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "Launch src/app.ts",
+      "program": "${workspaceFolder}/src/app.ts",
+      "runtimeArgs": ["-r", "ts-node/register"],
+      "cwd": "${workspaceFolder}",
+      "runtimeExecutable": "/Users/pongtheptiyawatwittaya/.nvm/versions/node/v20.11.1/bin/node",
+      "skipFiles": ["<node_internals>/**"],
+      "outFiles": ["${workspaceFolder}/**/*.js"],
+      "sourceMaps": true
+    }
+  ]
+}

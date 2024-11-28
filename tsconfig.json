@@ -13,13 +13,11 @@
     "sourceMap": true,                                   /* Generate source maps for debugging. */
     "declaration": true,                                 /* Generate .d.ts files for type declarations. */
     "declarationMap": true,                              /* Create sourcemaps for .d.ts files. */
-    "skipLibCheck": true                                 /* Skip type checking all .d.ts files. */
+    "skipLibCheck": true,                                /* Skip type checking all .d.ts files. */
+    "paths": {
+      "src/*": ["src/*"]                                 /* Set up path alias for "src". */
+    }
   },
-  "include": [
-    "src/**/*.ts"                                       /* Include all TypeScript files in the 'src' folder. */
-  ],
-  "exclude": [
-    "node_modules",                                     /* Exclude dependencies. */
-    "dist"                                              /* Exclude output directory. */
-  ]
+  "include": ["src/**/*.ts"],                            /* Include all TypeScript files in the 'src' folder. */
+  "exclude": ["node_modules", "dist"]                    /* Exclude dependencies and output directory. */
 }

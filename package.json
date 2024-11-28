@@ -4,9 +4,21 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node -r tsconfig-paths/register dist/src/app.js"
   },
   "keywords": [],
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "module-alias": "^2.2.3",
+    "tsconfig-paths": "^4.2.0",
+    "typescript": "^5.7.2"
+  },
+  "_moduleAliases": {
+    "src": "./dist/src"
+  },
+  "devDependencies": {
+    "ts-node": "^10.9.2"
+  }
 }

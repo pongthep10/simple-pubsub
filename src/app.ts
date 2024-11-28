@@ -1,6 +1,7 @@
+import "module-alias/register";
+
 import { EventEntity } from "src/domains/entities/eventEntity";
 import { MachineEntity } from "src/domains/entities/machineEntity";
-import { PubSubFramework } from "src/infrastructure/pubsub/pubsubFramework";
 import { MachineRepository } from "src/infrastructure/repositories/machineRepository";
 import { MessageEmitterRepository } from "src/infrastructure/repositories/messageEmitterRepository";
 import { SaleEventProcessor } from "src/adapters/eventProcessors/saleEventProcessor";
@@ -8,6 +9,7 @@ import { RefillEventProcessor } from "src/adapters/eventProcessors/refillEventPr
 import { StockWarningEventProcessor } from "src/adapters/eventProcessors/stockWarningEventProcessor";
 import { StockOkEventProcessor } from "src/adapters/eventProcessors/stockOkEventProcessor";
 import { Subscriber } from "src/infrastructure/pubsub/subscriber";
+import pubSubFrameworkInstance from "src/infrastructure/pubsub/pubsubFrameworkInstance";
 
 const randomMachine = (): string => {
   const random = Math.random() * 3;
@@ -28,9 +30,8 @@ const eventGenerator = (): EventEntity => {
 
 (async () => {
   // Initialize infrastructure
-  const pubSub = new PubSubFramework();
   const machineRepository = new MachineRepository();
-  const messageEmitterRepository = new MessageEmitterRepository(pubSub);
+  const messageEmitterRepository = new MessageEmitterRepository(pubSubFrameworkInstance);
 
   // Add machines to repository
   machineRepository.addMachine(new MachineEntity("001", 3));
@@ -44,10 +45,10 @@ const eventGenerator = (): EventEntity => {
   const stockOkProcessor = new StockOkEventProcessor();
 
   // Create and register subscribers
-  pubSub.subscribe("sale", new Subscriber("sale", saleProcessor));
-  pubSub.subscribe("refill", new Subscriber("refill", refillProcessor));
-  pubSub.subscribe("low_stock_warning", new Subscriber("low_stock_warning", stockWarningProcessor));
-  pubSub.subscribe("stock_level_ok", new Subscriber("stock_level_ok", stockOkProcessor));
+  pubSubFrameworkInstance.subscribe("sale", new Subscriber("sale", saleProcessor));
+  pubSubFrameworkInstance.subscribe("refill", new Subscriber("refill", refillProcessor));
+  pubSubFrameworkInstance.subscribe("low_stock_warning", new Subscriber("low_stock_warning", stockWarningProcessor));
+  pubSubFrameworkInstance.subscribe("stock_level_ok", new Subscriber("stock_level_ok", stockOkProcessor));
 
   // Generate and process random events
   const events: EventEntity[] = Array.from({ length: 10 }, () => eventGenerator());
@@ -59,7 +60,7 @@ const eventGenerator = (): EventEntity => {
   console.log("\nPublishing Events:");
   events.forEach(event => {
     console.log(`Publishing event: ${event.topic} for machine ${event.machineId}`);
-    pubSub.publish(event);
+    pubSubFrameworkInstance.publish(event);
   });
 
   console.log("\nFinal Machine States:");
